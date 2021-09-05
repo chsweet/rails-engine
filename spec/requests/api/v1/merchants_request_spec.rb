@@ -18,14 +18,14 @@ describe 'Merchants API' do
       expect(merchant[:id]).to be_an(String)
 
       expect(merchant).to have_key(:type)
-      expect(merchant[:id]).to be_an(String)
+      expect(merchant[:type]).to be_an(String)
+      expect(merchant[:type]).to eq("merchant")
 
       expect(merchant).to have_key(:attributes)
-      expect(merchant[:id]).to be_an(String)
+      expect(merchant[:attributes]).to be_an(Hash)
 
       expect(merchant[:attributes]).to have_key(:name)
       expect(merchant[:attributes][:name]).to be_an(String)
-
     end
   end
 
@@ -77,7 +77,7 @@ describe 'Merchants API' do
     get "/api/v1/merchants/#{id}"
 
     merchant = JSON.parse(response.body, symbolize_names: true)
-    
+
     expect(response).to be_successful
     expect(merchant[:data]).to be_an(Hash)
 
