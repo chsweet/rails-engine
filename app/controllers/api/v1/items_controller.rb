@@ -6,4 +6,8 @@ class Api::V1::ItemsController < ApplicationController
       render json: ItemSerializer.new(Item.paginate(page: params[:page], per_page: params[:per_page]))
     end
   end
+
+  def show
+    render json: ItemSerializer.new(Item.find(params[:id]))
+  end
 end
