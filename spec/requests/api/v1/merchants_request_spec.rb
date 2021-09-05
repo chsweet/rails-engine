@@ -39,7 +39,22 @@ describe 'Merchants API' do
     merchants = JSON.parse(response.body, symbolize_names: true)
 
     expect(merchants[:data].count).to eq(20)
+    expect(merchants[:data].first[:id]).to_not eq("#{Merchant.first.id}")
+    expect(merchants[:data].last[:id]).to_not eq("#{Merchant.last.id}")
+  end
 
+  it "sends first 20 merchants if page is 0 or lower" do
+    create_list(:merchant, 50)
+
+    get '/api/v1/merchants?page=0'
+
+    expect(response).to be_successful
+
+    merchants = JSON.parse(response.body, symbolize_names: true)
+
+    expect(merchants[:data].count).to eq(20)
+    expect(merchants[:data].first[:id]).to eq("#{Merchant.first.id}")
+    expect(merchants[:data].last[:id]).to_not eq("#{Merchant.last.id}")
   end
 
   it "sends a list of merchants depending on per_page number" do
@@ -52,5 +67,7 @@ describe 'Merchants API' do
     merchants = JSON.parse(response.body, symbolize_names: true)
 
     expect(merchants[:data].count).to eq(30)
+    expect(merchants[:data].first[:id]).to eq("#{Merchant.first.id}")
+    expect(merchants[:data].last[:id]).to_not eq("#{Merchant.last.id}")
   end
 end
