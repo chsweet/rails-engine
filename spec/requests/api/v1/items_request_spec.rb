@@ -155,13 +155,12 @@ describe 'Items API' do
     item_params = { name: "New Name" }
     headers = {"CONTENT_TYPE" => "application/json"}
 
-    # We include this header to make sure that these params are passed as JSON rather than as plain text
     patch "/api/v1/items/#{id}", headers: headers, params: JSON.generate({item: item_params})
     item = Item.find_by(id: id)
-    require "pry";binding.pry
+
     expect(response).to be_successful
-    expect(item.unit_price).to_not eq(previous_name)
-    expect(item.unit_price).to eq(1.50)
+    expect(item.name).to_not eq(previous_name)
+    expect(item.name).to eq("New Name")
   end
 
   it "gives a 404 error if merchant_id does not exist" do
@@ -169,9 +168,24 @@ describe 'Items API' do
     item_params = { merchant_id: 78313219879131544 }
     headers = {"CONTENT_TYPE" => "application/json"}
 
-    # We include this header to make sure that these params are passed as JSON rather than as plain text
     patch "/api/v1/items/#{id}", headers: headers, params: JSON.generate({item: item_params})
 
-    expect(response).to have_http_status(400)
+    expect(response).to have_http_status(404)
+  end
+
+  it "can destroy an item" do
+    item = create(:item)
+
+    expect(Item.count).to eq(1)
+
+    delete "/api/v1/items/#{item.id}"
+
+    expect(response).to be_successful
+    expect(Item.count).to eq(0)
+    expect{Item.find(item.id)}.to raise_error(ActiveRecord::RecordNotFound)
+  end
+
+  xit "finds the merchant info for a specific item" do
+
   end
 end
