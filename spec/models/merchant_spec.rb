@@ -21,7 +21,7 @@ RSpec.describe Merchant, type: :model do
         key = 'name'
         value = 'ring'
 
-        expect(Merchant.find_by_name(value)).to eq(merchant_4)
+        expect(Merchant.find_first_by_name(value)).to eq(merchant_4)
       end
     end
   end

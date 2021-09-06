@@ -5,7 +5,7 @@ class Merchant < ApplicationRecord
 
   self.per_page = 20
 
-  def self.find_by_name(value)
+  def self.find_first_by_name(value)
     Merchant.where("name ~* ?", value).order(:name).first
   end
 end

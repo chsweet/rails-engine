@@ -111,4 +111,34 @@ describe 'Merchants API' do
     expect(items[:data].first[:id]).to eq("#{item_1.id}")
     expect(items[:data].last[:id]).to eq("#{item_3.id}")
   end
+
+  it "return the first object based off of user query parameters" do
+    merchant_1 = create(:merchant, name: "Ring World")
+    merchant_2 = create(:merchant, name: "Turing")
+    merchant_3 = create(:merchant, name: "Pet Shop")
+    merchant_4 = create(:merchant, name: "Ring Ring")
+
+    get "/api/v1/merchants/find?name=ring"
+
+    merchant = JSON.parse(response.body, symbolize_names: true)
+
+    expect(response).to be_successful
+    expect(merchant[:data]).to be_an(Hash)
+    expect(merchant[:data][:id]).to eq("#{merchant_4.id}")
+    expect(merchant[:data][:attributes][:name]).to eq("#{merchant_4.name}")
+  end
+
+  xit "return null object if user query parameters have no match" do
+    merchant_1 = create(:merchant, name: "Ring World")
+    merchant_2 = create(:merchant, name: "Turing")
+    merchant_3 = create(:merchant, name: "Pet Shop")
+    merchant_4 = create(:merchant, name: "Ring Ring")
+
+    get "/api/v1/merchants/find?name=dog"
+
+    merchant = JSON.parse(response.body, symbolize_names: true)
+    # require "pry";binding.pry
+    expect(response).to be_successful
+    expect(merchant[:data]).to be_an(Hash)
+  end
 end
