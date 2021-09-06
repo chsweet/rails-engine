@@ -163,5 +163,4 @@ describe 'Merchants API' do
 
     expect(response).to have_http_status(400)
   end
-
 end

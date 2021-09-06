@@ -203,4 +203,60 @@ describe 'Items API' do
     expect(merchant[:data][:type]).to eq("merchant")
     expect(merchant[:data][:attributes][:name]).to eq("#{merchant_1.name}")
   end
+
+  it "finds all items that match the name parameters" do
+    item_1 = create(:item, name: "Ring World Banner")
+    item_2 = create(:item, name: "Turing Tee")
+    item_3 = create(:item, name: "Dog Collar")
+    item_4 = create(:item, name: "Ring Ring Song")
+    item_5 = create(:item, name: "Slap Band")
+
+    get "/api/v1/items/find_all?name=ring"
+
+    items = JSON.parse(response.body, symbolize_names: true)
+
+    expect(response).to be_successful
+    expect(items[:data]).to be_an(Array)
+    expect(items[:data].count).to eq(3)
+    expect(items[:data].first[:id]).to eq("#{item_4.id}")
+    expect(items[:data].last[:id]).to eq("#{item_2.id}")
+  end
+
+  it "finds all items that are equal to or greater than min_price parameters" do
+    item_1 = create(:item, unit_price: 4.99)
+    item_2 = create(:item, unit_price: 3.99)
+    item_3 = create(:item, unit_price: 5.99)
+    item_4 = create(:item, unit_price: 2.50)
+    item_5 = create(:item, unit_price: 6.50)
+    item_6 = create(:item, unit_price: 7.00)
+
+    get "/api/v1/items/find_all?min_price=4.99"
+
+    items = JSON.parse(response.body, symbolize_names: true)
+
+    expect(response).to be_successful
+    expect(items[:data]).to be_an(Array)
+    expect(items[:data].count).to eq(4)
+    expect(items[:data].first[:id]).to eq("#{item_1.id}")
+    expect(items[:data].last[:id]).to eq("#{item_6.id}")
+  end
+
+  it "finds all items that are equal to or less than max_price parameters" do
+    item_1 = create(:item, unit_price: 4.99)
+    item_2 = create(:item, unit_price: 3.99)
+    item_3 = create(:item, unit_price: 5.99)
+    item_4 = create(:item, unit_price: 2.50)
+    item_5 = create(:item, unit_price: 6.50)
+    item_6 = create(:item, unit_price: 7.00)
+
+    get "/api/v1/items/find_all?max_price=4.99"
+
+    items = JSON.parse(response.body, symbolize_names: true)
+
+    expect(response).to be_successful
+    expect(items[:data]).to be_an(Array)
+    expect(items[:data].count).to eq(3)
+    expect(items[:data].first[:id]).to eq("#{item_1.id}")
+    expect(items[:data].last[:id]).to eq("#{item_4.id}")
+  end
 end
