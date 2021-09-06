@@ -141,4 +141,27 @@ describe 'Merchants API' do
     expect(response).to be_successful
     expect(merchant[:data]).to be_an(Hash)
   end
+
+  it "returns 400 response if user query parameters are not complete" do
+    merchant_1 = create(:merchant, name: "Ring World")
+    merchant_2 = create(:merchant, name: "Turing")
+    merchant_3 = create(:merchant, name: "Pet Shop")
+    merchant_4 = create(:merchant, name: "Ring Ring")
+
+    get "/api/v1/merchants/find?name="
+
+    expect(response).to have_http_status(400)
+  end
+
+  it "returns 400 response if user query parameters are missing" do
+    merchant_1 = create(:merchant, name: "Ring World")
+    merchant_2 = create(:merchant, name: "Turing")
+    merchant_3 = create(:merchant, name: "Pet Shop")
+    merchant_4 = create(:merchant, name: "Ring Ring")
+
+    get "/api/v1/merchants/find"
+
+    expect(response).to have_http_status(400)
+  end
+
 end
