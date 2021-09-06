@@ -10,4 +10,32 @@ class Api::V1::ItemsController < ApplicationController
   def show
     render json: ItemSerializer.new(Item.find(params[:id]))
   end
+
+  def create
+    item = Item.new(item_params)
+
+    if item.save
+      render json: ItemSerializer.new(item)
+    else
+      render status: :bad_request
+    end
+  end
+
+  def update
+    item = Item.find(params[:id])
+
+    if params[:item][:merchant_id] && Merchant.exists?(:id => params[:item][:merchant_id]) == false
+      render status: :not_found
+    else
+      item.update(item_params)
+
+      render json: ItemSerializer.new(item)
+    end
+  end
+
+  private
+
+  def item_params
+    params.require(:item).permit(:name, :description, :unit_price, :merchant_id)
+  end
 end

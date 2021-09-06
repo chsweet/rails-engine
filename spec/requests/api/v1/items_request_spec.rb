@@ -112,4 +112,66 @@ describe 'Items API' do
     expect(item[:data][:attributes]).to have_key(:merchant_id)
     expect(item[:data][:attributes][:merchant_id]).to be_a(Integer)
   end
+
+  it "can create a new book" do
+    merchant = create(:merchant)
+    item_params = ({
+                    name: 'Slap Bracelet',
+                    description: 'A slap bracelet was a bracelet invented by Wisconsin teacher Stuart Anders in 1990, sold originally under the brand name of "Slap Wrap".',
+                    unit_price: 2.50,
+                    merchant_id: merchant.id,
+                  })
+    headers = {"CONTENT_TYPE" => "application/json"}
+
+    # We include this header to make sure that these params are passed as JSON rather than as plain text
+    post "/api/v1/items", headers: headers, params: JSON.generate(item: item_params)
+
+    created_item = Item.last
+
+    expect(response).to be_successful
+    expect(created_item.name).to eq(item_params[:name])
+    expect(created_item.description).to eq(item_params[:description])
+    expect(created_item.unit_price).to eq(item_params[:unit_price])
+    expect(created_item.merchant_id).to eq(item_params[:merchant_id])
+  end
+
+  it "returns error if any attributes are missing" do
+    merchant = create(:merchant)
+    item_params = ({
+                    name: 'Slap Bracelet',
+                    description: 'A slap bracelet was a bracelet invented by Wisconsin teacher Stuart Anders in 1990, sold originally under the brand name of "Slap Wrap".',
+                    merchant_id: merchant.id,
+                  })
+    headers = {"CONTENT_TYPE" => "application/json"}
+
+    post "/api/v1/items", headers: headers, params: JSON.generate(item: item_params)
+
+    expect(response).to have_http_status(400)
+  end
+
+  it "can update an existing items" do
+    id = create(:item).id
+    previous_name = Item.last.name
+    item_params = { name: "New Name" }
+    headers = {"CONTENT_TYPE" => "application/json"}
+
+    # We include this header to make sure that these params are passed as JSON rather than as plain text
+    patch "/api/v1/items/#{id}", headers: headers, params: JSON.generate({item: item_params})
+    item = Item.find_by(id: id)
+    require "pry";binding.pry
+    expect(response).to be_successful
+    expect(item.unit_price).to_not eq(previous_name)
+    expect(item.unit_price).to eq(1.50)
+  end
+
+  it "gives a 404 error if merchant_id does not exist" do
+    id = create(:item).id
+    item_params = { merchant_id: 78313219879131544 }
+    headers = {"CONTENT_TYPE" => "application/json"}
+
+    # We include this header to make sure that these params are passed as JSON rather than as plain text
+    patch "/api/v1/items/#{id}", headers: headers, params: JSON.generate({item: item_params})
+
+    expect(response).to have_http_status(400)
+  end
 end
