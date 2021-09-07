@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe 'Items API' do
-  it "default sends a list of first 20 items" do
+  it 'default sends a list of first 20 items' do
     create_list(:item, 25)
 
     get '/api/v1/items'
@@ -38,7 +38,7 @@ describe 'Items API' do
     end
   end
 
-  it "sends a list of 20 items depending on page" do
+  it 'sends a list of 20 items depending on page' do
     create_list(:item, 50)
 
     get '/api/v1/items?page=2'
@@ -52,7 +52,7 @@ describe 'Items API' do
     expect(items[:data].last[:id]).to_not eq("#{Item.last.id}")
   end
 
-  it "sends first 20 items if page is 0 or lower" do
+  it 'sends first 20 items if page is 0 or lower' do
     create_list(:item, 50)
 
     get '/api/v1/items?page=0'
@@ -66,7 +66,7 @@ describe 'Items API' do
     expect(items[:data].last[:id]).to_not eq("#{Item.last.id}")
   end
 
-  it "sends a list of items depending on per_page number" do
+  it 'sends a list of items depending on per_page number' do
     create_list(:item, 50)
 
     get '/api/v1/items?per_page=30'
@@ -80,7 +80,7 @@ describe 'Items API' do
     expect(items[:data].last[:id]).to_not eq("#{Item.last.id}")
   end
 
-  it "can get one item by its id" do
+  it 'can get one item by its id' do
     id = create(:item).id
 
     get "/api/v1/items/#{id}"
@@ -113,7 +113,7 @@ describe 'Items API' do
     expect(item[:data][:attributes][:merchant_id]).to be_a(Integer)
   end
 
-  xit "can create a new item" do
+  xit 'can create a new item' do
     merchant = create(:merchant)
     item_params = ({
                     name: 'Slap Bracelet',
@@ -124,7 +124,7 @@ describe 'Items API' do
     headers = {"CONTENT_TYPE" => "application/json"}
 
     # We include this header to make sure that these params are passed as JSON rather than as plain text
-    post "/api/v1/items", headers: headers, params: JSON.generate(item: item_params)
+    post '/api/v1/items', headers: headers, params: JSON.generate(item: item_params)
 
     created_item = Item.last
 
@@ -135,7 +135,7 @@ describe 'Items API' do
     expect(created_item.merchant_id).to eq(item_params[:merchant_id])
   end
 
-  it "returns 400 error if any attributes are missing" do
+  it 'returns 400 error if any attributes are missing' do
     merchant = create(:merchant)
     item_params = ({
                     name: 'Slap Bracelet',
@@ -144,12 +144,12 @@ describe 'Items API' do
                   })
     headers = {"CONTENT_TYPE" => "application/json"}
 
-    post "/api/v1/items", headers: headers, params: JSON.generate(item: item_params)
+    post '/api/v1/items', headers: headers, params: JSON.generate(item: item_params)
 
     expect(response).to have_http_status(400)
   end
 
-  it "can update an existing items" do
+  it 'can update an existing items' do
     id = create(:item).id
     previous_name = Item.last.name
     item_params = { name: "New Name" }
@@ -163,7 +163,7 @@ describe 'Items API' do
     expect(item.name).to eq("New Name")
   end
 
-  it "gives a 404 error if merchant_id does not exist" do
+  it 'gives a 404 error if merchant_id does not exist' do
     id = create(:item).id
     item_params = { merchant_id: 78313219879131544 }
     headers = {"CONTENT_TYPE" => "application/json"}
@@ -173,7 +173,7 @@ describe 'Items API' do
     expect(response).to have_http_status(404)
   end
 
-  xit "can destroy an item" do
+  xit 'can destroy an item' do
     invoice = create(:invoice)
     item = create(:item)
     # invoice_item = (:invoice_item, invoice_id: invoice.id, item_id: item.id)
@@ -187,7 +187,7 @@ describe 'Items API' do
     expect{Item.find(item.id)}.to raise_error(ActiveRecord::RecordNotFound)
   end
 
-  it "finds the merchant info for a specific item" do
+  it 'finds the merchant info for a specific item' do
     merchant_1 = create(:merchant)
     item = create(:item, merchant_id: merchant_1.id)
     id = item.id
@@ -204,14 +204,14 @@ describe 'Items API' do
     expect(merchant[:data][:attributes][:name]).to eq("#{merchant_1.name}")
   end
 
-  it "finds all items that match the name parameters" do
-    item_1 = create(:item, name: "Ring World Banner")
-    item_2 = create(:item, name: "Turing Tee")
-    item_3 = create(:item, name: "Dog Collar")
-    item_4 = create(:item, name: "Ring Ring Song")
-    item_5 = create(:item, name: "Slap Band")
+  it 'finds all items that match the name parameters' do
+    item_1 = create(:item, name: 'Ring World Banner')
+    item_2 = create(:item, name: 'Turing Tee')
+    item_3 = create(:item, name: 'Dog Collar')
+    item_4 = create(:item, name: 'Ring Ring Song')
+    item_5 = create(:item, name: 'Slap Band')
 
-    get "/api/v1/items/find_all?name=ring"
+    get '/api/v1/items/find_all?name=ring'
 
     items = JSON.parse(response.body, symbolize_names: true)
 
@@ -222,7 +222,7 @@ describe 'Items API' do
     expect(items[:data].last[:id]).to eq("#{item_2.id}")
   end
 
-  it "finds all items that are equal to or greater than min_price parameters" do
+  it 'finds all items that are equal to or greater than min_price parameters' do
     item_1 = create(:item, unit_price: 4.99)
     item_2 = create(:item, unit_price: 3.99)
     item_3 = create(:item, unit_price: 5.99)
@@ -230,7 +230,7 @@ describe 'Items API' do
     item_5 = create(:item, unit_price: 6.50)
     item_6 = create(:item, unit_price: 7.00)
 
-    get "/api/v1/items/find_all?min_price=4.99"
+    get '/api/v1/items/find_all?min_price=4.99'
 
     items = JSON.parse(response.body, symbolize_names: true)
 
@@ -241,7 +241,7 @@ describe 'Items API' do
     expect(items[:data].last[:id]).to eq("#{item_6.id}")
   end
 
-  it "finds all items that are equal to or less than max_price parameters" do
+  it 'finds all items that are equal to or less than max_price parameters' do
     item_1 = create(:item, unit_price: 4.99)
     item_2 = create(:item, unit_price: 3.99)
     item_3 = create(:item, unit_price: 5.99)
@@ -249,7 +249,7 @@ describe 'Items API' do
     item_5 = create(:item, unit_price: 6.50)
     item_6 = create(:item, unit_price: 7.00)
 
-    get "/api/v1/items/find_all?max_price=4.99"
+    get '/api/v1/items/find_all?max_price=4.99'
 
     items = JSON.parse(response.body, symbolize_names: true)
 

@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe 'Merchants API' do
-  it "default sends a list of first 20 merchants" do
+  it 'default sends a list of first 20 merchants' do
     create_list(:merchant, 25)
 
     get '/api/v1/merchants'
@@ -29,7 +29,7 @@ describe 'Merchants API' do
     end
   end
 
-  it "sends a list of 20 merchants depending on page" do
+  it 'sends a list of 20 merchants depending on page' do
     create_list(:merchant, 50)
 
     get '/api/v1/merchants?page=2'
@@ -43,7 +43,7 @@ describe 'Merchants API' do
     expect(merchants[:data].last[:id]).to_not eq("#{Merchant.last.id}")
   end
 
-  it "sends first 20 merchants if page is 0 or lower" do
+  it 'sends first 20 merchants if page is 0 or lower' do
     create_list(:merchant, 50)
 
     get '/api/v1/merchants?page=0'
@@ -57,7 +57,7 @@ describe 'Merchants API' do
     expect(merchants[:data].last[:id]).to_not eq("#{Merchant.last.id}")
   end
 
-  it "sends a list of merchants depending on per_page number" do
+  it 'sends a list of merchants depending on per_page number' do
     create_list(:merchant, 50)
 
     get '/api/v1/merchants?per_page=30'
@@ -71,7 +71,7 @@ describe 'Merchants API' do
     expect(merchants[:data].last[:id]).to_not eq("#{Merchant.last.id}")
   end
 
-  it "can get one merchant by its id" do
+  it 'can get one merchant by its id' do
     id = create(:merchant).id
 
     get "/api/v1/merchants/#{id}"
@@ -94,7 +94,7 @@ describe 'Merchants API' do
     expect(merchant[:data][:attributes][:name]).to be_a(String)
   end
 
-  it "finds the items info for a specific merchant" do
+  it 'finds the items info for a specific merchant' do
     merchant = create(:merchant)
     id = merchant.id
     item_1 = create(:item, merchant_id: merchant.id)
@@ -112,13 +112,13 @@ describe 'Merchants API' do
     expect(items[:data].last[:id]).to eq("#{item_3.id}")
   end
 
-  it "return the first object based off of user query parameters" do
-    merchant_1 = create(:merchant, name: "Ring World")
-    merchant_2 = create(:merchant, name: "Turing")
-    merchant_3 = create(:merchant, name: "Pet Shop")
-    merchant_4 = create(:merchant, name: "Ring Ring")
+  it 'return the first object based off of user query parameters' do
+    merchant_1 = create(:merchant, name: 'Ring World')
+    merchant_2 = create(:merchant, name: 'Turing')
+    merchant_3 = create(:merchant, name: 'Pet Shop')
+    merchant_4 = create(:merchant, name: 'Ring Ring')
 
-    get "/api/v1/merchants/find?name=ring"
+    get '/api/v1/merchants/find?name=ring'
 
     merchant = JSON.parse(response.body, symbolize_names: true)
 
@@ -128,38 +128,38 @@ describe 'Merchants API' do
     expect(merchant[:data][:attributes][:name]).to eq("#{merchant_4.name}")
   end
 
-  xit "return null object if user query parameters have no match" do
-    merchant_1 = create(:merchant, name: "Ring World")
-    merchant_2 = create(:merchant, name: "Turing")
-    merchant_3 = create(:merchant, name: "Pet Shop")
-    merchant_4 = create(:merchant, name: "Ring Ring")
+  it 'return null object if user query parameters have no match' do
+    merchant_1 = create(:merchant, name: 'Ring World')
+    merchant_2 = create(:merchant, name: 'Turing')
+    merchant_3 = create(:merchant, name: 'Pet Shop')
+    merchant_4 = create(:merchant, name: 'Ring Ring')
 
-    get "/api/v1/merchants/find?name=dog"
+    get '/api/v1/merchants/find?name=dog'
 
     merchant = JSON.parse(response.body, symbolize_names: true)
-    # require "pry";binding.pry
+    require "pry";binding.pry
     expect(response).to be_successful
     expect(merchant[:data]).to be_an(Hash)
   end
 
-  it "returns 400 response if user query parameters are not complete" do
-    merchant_1 = create(:merchant, name: "Ring World")
-    merchant_2 = create(:merchant, name: "Turing")
-    merchant_3 = create(:merchant, name: "Pet Shop")
-    merchant_4 = create(:merchant, name: "Ring Ring")
+  it 'returns 400 response if user query parameters are not complete' do
+    merchant_1 = create(:merchant, name: 'Ring World')
+    merchant_2 = create(:merchant, name: 'Turing')
+    merchant_3 = create(:merchant, name: 'Pet Shop')
+    merchant_4 = create(:merchant, name: 'Ring Ring')
 
-    get "/api/v1/merchants/find?name="
+    get '/api/v1/merchants/find?name='
 
     expect(response).to have_http_status(400)
   end
 
-  it "returns 400 response if user query parameters are missing" do
-    merchant_1 = create(:merchant, name: "Ring World")
-    merchant_2 = create(:merchant, name: "Turing")
-    merchant_3 = create(:merchant, name: "Pet Shop")
-    merchant_4 = create(:merchant, name: "Ring Ring")
+  it 'returns 400 response if user query parameters are missing' do
+    merchant_1 = create(:merchant, name: 'Ring World')
+    merchant_2 = create(:merchant, name: 'Turing')
+    merchant_3 = create(:merchant, name: 'Pet Shop')
+    merchant_4 = create(:merchant, name: 'Ring Ring')
 
-    get "/api/v1/merchants/find"
+    get '/api/v1/merchants/find'
 
     expect(response).to have_http_status(400)
   end
