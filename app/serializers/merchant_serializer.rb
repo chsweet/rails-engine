@@ -26,7 +26,7 @@ class MerchantSerializer
             id: "#{merchant.id}",
             type: "merchant_revenue",
             attributes: {
-              revenue: merchant.revenue
+              revenue: merchant.merchant_revenue
             }
           }
     }

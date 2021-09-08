@@ -9,7 +9,7 @@ class Api::V1::Revenue::MerchantsController < ApplicationController
   end
 
   def show
-    render json: MerchantSerializer.merchant_revenue(Merchant.merchant_revenue(params[:id]))
+    render json: MerchantSerializer.merchant_revenue(Merchant.find(params[:id]))
   end
 
   private
