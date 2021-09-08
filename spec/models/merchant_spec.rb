@@ -41,7 +41,6 @@ RSpec.describe Merchant, type: :model do
     @transaction_5 = create(:transaction, result: 'failed', invoice: Invoice.fifth)
   end
 
-
   describe 'class methods' do
     describe '::find_by_params' do
       it 'return the first object based off of user query parameters' do
@@ -58,20 +57,12 @@ RSpec.describe Merchant, type: :model do
         expect(Merchant.merchant_sorted_by_revenue(quantity)).to eq([@merchant_3, @merchant_4, @merchant_2])
       end
     end
-
-    describe '::merchant_sorted_by_revenue' do
-      it 'returns merchants sorted by revenue and the number of the merchants passed in from the params' do
-        id = @merchant_2.id
-
-        expect(Merchant.merchant_revenue(id)).to eq(@merchant_2)
-      end
-    end
   end
 
   describe 'instance methods' do
     describe '#merchant_revenue' do
       it 'returns merchants sorted by revenue and the number of the merchants passed in from the params' do
-        expect(@merchant_2.merchant_revenue.revenue).to eq(5.00)
+        expect(@merchant_2.merchant_revenue).to eq(5.00)
       end
     end
   end

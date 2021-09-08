@@ -20,10 +20,8 @@ class Merchant < ApplicationRecord
   end
 
   def merchant_revenue
-    require "pry";binding.pry
-    joins(invoices: :transactions)
-    .joins(invoices: :invoice_items)
-    .select('merchants.*, sum(invoice_items.quantity * invoice_items.unit_price) as revenue')
+    invoices.joins(:transactions, :invoice_items)
     .where("transactions.result = 'success' AND invoices.status = 'shipped'")
+    .sum('invoice_items.quantity * invoice_items.unit_price')
   end
 end
