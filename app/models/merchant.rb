@@ -6,14 +6,15 @@ class Merchant < ApplicationRecord
   self.per_page = 20
 
   def self.find_first_by_name(value)
-    Merchant.where("name ~* ?", value).order(:name).first
+    order(:name).find_by("name ~* ?", value)
   end
 
   def self.merchant_sorted_by_revenue(quantity)
     require "pry";binding.pry
-    joins(items: [invoices: :transactions])
-    .select('merchants.*, sum(invoice_items.quantity * invoice_items.unit_price/100.0) as revenue')
-    .where("transactions.result = 'success'")
+    joins(invoices: :transactions)
+    .joins(invoices: :invoice_items)
+    .select('merchants.*, sum(invoice_items.quantity * invoice_items.unit_price) as revenue')
+    .where("transactions.result = 'success' AND invoices.status = 'shipped'")
     .group('merchants.id')
     .order('revenue DESC')
     .limit(quantity)

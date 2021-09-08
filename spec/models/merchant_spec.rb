@@ -46,6 +46,11 @@ RSpec.describe Merchant, type: :model do
         invoice_item_2 = create(:invoice_item, invoice: Invoice.fourth, item: Item.fourth, quantity: 10, unit_price: 1.00)
         invoice_item_3 = create(:invoice_item, invoice: Invoice.fifth, item: Item.fifth, quantity: 10, unit_price: 1.00)
 
+        transaction_1 = create(:transaction, invoice: Invoice.first)
+        transaction_2 = create(:transaction, invoice: Invoice.second)
+        transaction_3 = create(:transaction, invoice: Invoice.third)
+        transaction_4 = create(:transaction, invoice: Invoice.fourth)
+        transaction_5 = create(:transaction, result: 'failed', invoice: Invoice.fifth)
         quantity = 3
 
         expect(Merchant.merchant_sorted_by_revenue(quantity)).to eq([@merchant_3, @merchant_4, @merchant_2])
