@@ -10,6 +10,7 @@ class Merchant < ApplicationRecord
   end
 
   def self.merchant_sorted_by_revenue(quantity)
+    # joins(items: { invoice_items: { invoice: :transactions }})
     joins(invoices: :transactions)
     .joins(invoices: :invoice_items)
     .select('merchants.*, sum(invoice_items.quantity * invoice_items.unit_price) as revenue')
