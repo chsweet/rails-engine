@@ -10,7 +10,6 @@ class Merchant < ApplicationRecord
   end
 
   def self.merchant_sorted_by_revenue(quantity)
-    require "pry";binding.pry
     joins(invoices: :transactions)
     .joins(invoices: :invoice_items)
     .select('merchants.*, sum(invoice_items.quantity * invoice_items.unit_price) as revenue')
@@ -18,5 +17,13 @@ class Merchant < ApplicationRecord
     .group('merchants.id')
     .order('revenue DESC')
     .limit(quantity)
+  end
+
+  def merchant_revenue
+    require "pry";binding.pry
+    joins(invoices: :transactions)
+    .joins(invoices: :invoice_items)
+    .select('merchants.*, sum(invoice_items.quantity * invoice_items.unit_price) as revenue')
+    .where("transactions.result = 'success' AND invoices.status = 'shipped'")
   end
 end
