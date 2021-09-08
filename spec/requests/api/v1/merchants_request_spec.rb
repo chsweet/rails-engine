@@ -137,7 +137,7 @@ describe 'Merchants API' do
     get '/api/v1/merchants/find?name=dog'
 
     merchant = JSON.parse(response.body, symbolize_names: true)
-    require "pry";binding.pry
+
     expect(response).to be_successful
     expect(merchant[:data]).to be_an(Hash)
   end
