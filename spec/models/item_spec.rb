@@ -12,7 +12,7 @@ RSpec.describe Item, type: :model do
     it { should validate_presence_of(:description) }
     it { should validate_presence_of(:unit_price) }
   end
-  
+
   before :each do
     @merchant_1 = create(:merchant, name: 'Ring World')
     @merchant_2 = create(:merchant, name: 'Turing')
@@ -70,11 +70,11 @@ RSpec.describe Item, type: :model do
       end
     end
 
-    describe '::item_revenue' do
+    describe '::items_sorted_by_revenue' do
       it 'returns quantity of items ranked by descending revenue' do
         quantity = 2
 
-        expect(Item.item_revenue(quantity)).to eq([@item_3, @item_4])
+        expect(Item.items_sorted_by_revenue(quantity)).to eq([@item_3, @item_4])
       end
     end
   end

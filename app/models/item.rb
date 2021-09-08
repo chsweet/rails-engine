@@ -20,7 +20,7 @@ class Item < ApplicationRecord
     Item.where("unit_price <= ?", value.to_f)
   end
 
-  def self.item_revenue(quantity)
+  def self.items_sorted_by_revenue(quantity)
     joins(:invoice_items, merchant: [invoices: :transactions])
     .select('items.*, sum(invoice_items.quantity * invoice_items.unit_price) as revenue')
     .where("transactions.result = 'success' AND invoices.status = 'shipped'")
