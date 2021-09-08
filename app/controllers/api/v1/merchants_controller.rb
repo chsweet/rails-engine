@@ -13,7 +13,7 @@ class Api::V1::MerchantsController < ApplicationController
 
   def find
     if find_params
-      render json: MerchantSerializer.new(Merchant.find_first_by_name(params[:name])).serializable_hash
+      render json: MerchantSerializer.new(Merchant.find_first_by_name(params[:name]))
     else
       render status: :bad_request
     end
