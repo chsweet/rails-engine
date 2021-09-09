@@ -19,6 +19,16 @@ class Api::V1::MerchantsController < ApplicationController
     end
   end
 
+  def most_items
+    quantity = params[:quantity].to_i
+
+    if params[:quantity]
+      render json: MerchantSerializer.merchants_items_sold(Merchant.merchant_items_sold(quantity))
+    else
+      render status: :bad_request
+    end
+  end
+
   private
 
   def find_params

@@ -57,6 +57,18 @@ RSpec.describe Merchant, type: :model do
         expect(Merchant.merchant_sorted_by_revenue(quantity)).to eq([@merchant_3, @merchant_4, @merchant_2])
       end
     end
+
+    describe '::merchant_items_sold' do
+      it 'returns a variable number of merchants ranked by total number of items sold' do
+        quantity = 3
+
+        result = Merchant.merchant_items_sold(quantity).map do |merchant|
+                          merchant.name
+                        end
+
+        expect(result).to eq([@merchant_3.name, @merchant_4.name, @merchant_2.name])
+      end
+    end
   end
 
   describe 'instance methods' do

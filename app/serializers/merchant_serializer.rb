@@ -31,4 +31,20 @@ class MerchantSerializer
           }
     }
   end
+
+  def self.merchants_items_sold(merchants)
+    {
+      data:
+        merchants.map do |merchant|
+          {
+            id: "#{merchant.id}",
+            type: "items_sold",
+            attributes: {
+              name: "#{merchant.name}",
+              count: merchant.count
+              }
+          }
+        end
+    }
+  end
 end
