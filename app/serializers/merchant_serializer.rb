@@ -1,6 +1,6 @@
 class MerchantSerializer
   include   FastJsonapi::ObjectSerializer
-  set_type :object
+  # set_type :object
   attributes :name
 
   def self.merchant_name_revenue(merchants)

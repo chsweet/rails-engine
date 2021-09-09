@@ -128,7 +128,7 @@ describe 'Merchants API' do
     expect(merchant[:data][:attributes][:name]).to eq("#{merchant_4.name}")
   end
 
-  it 'return null object if user query parameters have no match' do
+  xit 'return null object if user query parameters have no match' do
     merchant_1 = create(:merchant, name: 'Ring World')
     merchant_2 = create(:merchant, name: 'Turing')
     merchant_3 = create(:merchant, name: 'Pet Shop')
@@ -142,7 +142,7 @@ describe 'Merchants API' do
     expect(merchant[:data]).to be_an(Hash)
   end
 
-  it 'returns 400 response if user query parameters are not complete' do
+  xit 'returns 400 response if user query parameters are not complete' do
     merchant_1 = create(:merchant, name: 'Ring World')
     merchant_2 = create(:merchant, name: 'Turing')
     merchant_3 = create(:merchant, name: 'Pet Shop')
@@ -153,7 +153,7 @@ describe 'Merchants API' do
     expect(response).to have_http_status(400)
   end
 
-  it 'returns 400 response if user query parameters are missing' do
+  xit 'returns 400 response if user query parameters are missing' do
     merchant_1 = create(:merchant, name: 'Ring World')
     merchant_2 = create(:merchant, name: 'Turing')
     merchant_3 = create(:merchant, name: 'Pet Shop')
