@@ -70,8 +70,8 @@ describe 'Revenue Items API' do
     end
   end
 
-  xit 'returns default of 10 of items ranked by descending revenue if quantity is not given' do
-    get '/api/v1/revenue/items?quantity=2'
+  it 'returns default of 10 of items ranked by descending revenue if quantity is not given' do
+    get '/api/v1/revenue/items'
 
     expect(response).to be_successful
 
@@ -79,5 +79,17 @@ describe 'Revenue Items API' do
 
     expect(items[:data].count).to eq(10)
     expect(items[:data]).to be_an(Array)
+  end
+
+  it 'returns 400 error if quantity is a string' do
+    get "/api/v1/revenue/items?quantity='2'"
+
+    expect(response).to have_http_status(400)
+  end
+
+  it 'returns 400 error if quantity is blank' do
+    get '/api/v1/revenue/items?quantity='
+
+    expect(response).to have_http_status(400)
   end
 end
