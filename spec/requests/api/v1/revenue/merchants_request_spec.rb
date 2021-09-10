@@ -38,7 +38,7 @@ describe 'Revenue Merchants API' do
     expect(response).to be_successful
 
     merchants = JSON.parse(response.body, symbolize_names: true)
-    # require "pry";binding.pry
+
     expect(merchants[:data].count).to eq(2)
     expect(merchants[:data]).to be_an(Array)
 
@@ -67,13 +67,13 @@ describe 'Revenue Merchants API' do
     expect(response).to have_http_status(400)
   end
 
-  xit 'returns 400 error if quantity is blank' do
+  it 'returns 400 error if quantity is blank' do
     get '/api/v1/revenue/merchants?quantity='
 
     expect(response).to have_http_status(400)
   end
 
-  xit 'returns 400 error if params are missing' do
+  it 'returns 400 error if params are missing' do
     get '/api/v1/revenue/merchants'
 
     expect(response).to have_http_status(400)
