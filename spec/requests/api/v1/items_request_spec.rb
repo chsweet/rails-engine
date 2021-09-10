@@ -113,7 +113,7 @@ describe 'Items API' do
     expect(item[:data][:attributes][:merchant_id]).to be_a(Integer)
   end
 
-  xit 'can create a new item' do
+  it 'can create a new item' do
     merchant = create(:merchant)
     item_params = ({
                     name: 'Slap Bracelet',
@@ -173,35 +173,17 @@ describe 'Items API' do
     expect(response).to have_http_status(404)
   end
 
-  xit 'can destroy an item' do
+  it 'can destroy an item' do
     invoice = create(:invoice)
     item = create(:item)
-    # invoice_item = (:invoice_item, invoice_id: invoice.id, item_id: item.id)
 
     expect(Item.count).to eq(1)
 
     delete "/api/v1/items/#{item.id}"
-    require "pry";binding.pry
+
     expect(response).to have_http_status(204)
     expect(Item.count).to eq(0)
     expect{Item.find(item.id)}.to raise_error(ActiveRecord::RecordNotFound)
-  end
-
-  it 'finds the merchant info for a specific item' do
-    merchant_1 = create(:merchant)
-    item = create(:item, merchant_id: merchant_1.id)
-    id = item.id
-
-    get "/api/v1/items/#{id}/merchant"
-
-    merchant = JSON.parse(response.body, symbolize_names: true)
-
-    expect(response).to be_successful
-    expect(merchant[:data]).to be_an(Hash)
-
-    expect(merchant[:data][:id]).to eq("#{merchant_1.id}")
-    expect(merchant[:data][:type]).to eq("merchant")
-    expect(merchant[:data][:attributes][:name]).to eq("#{merchant_1.name}")
   end
 
   it 'finds all items that match the name parameters' do
