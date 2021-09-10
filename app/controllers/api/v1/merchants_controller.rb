@@ -8,30 +8,27 @@ class Api::V1::MerchantsController < ApplicationController
   end
 
   def show
-    render json: MerchantSerializer.new(Merchant.find(params[:id]))
+    merchant = Merchant.find(params[:id])
+    render json: MerchantSerializer.new(merchant)
   end
 
   def find
-    if find_params
-      render json: MerchantSerializer.new(Merchant.find_first_by_name(params[:name]))
+    merchant = Merchant.find_first_by_name(params[:name])
+
+    if params[:name] && merchant.nil?
+      render json: {data: {}}, status: :ok
+    elsif params[:name] && params[:name].empty? == false
+      render json: MerchantSerializer.new(merchant)
     else
       render status: :bad_request
     end
   end
 
   def most_items
-    quantity = params[:quantity].to_i
-
     if params[:quantity]
-      render json: MerchantSerializer.merchants_items_sold(Merchant.merchant_items_sold(quantity))
+      render json: MerchantSerializer.merchants_items_sold(Merchant.merchant_items_sold(params[:quantity]))
     else
       render status: :bad_request
     end
-  end
-
-  private
-
-  def find_params
-    params.require(:name)
   end
 end
